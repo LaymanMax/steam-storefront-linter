@@ -1,0 +1,22 @@
+[package]
+name = "linter-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+linter-core = { path = "../linter-core" }
+tokio.workspace = true
+axum = { version = "0.7", features = ["multipart"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace", "fs", "limit"] }
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+
+[dev-dependencies]
+reqwest.workspace = true
