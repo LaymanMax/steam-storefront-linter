@@ -1,0 +1,21 @@
+{
+  "name": "steam-storefront-linter-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "dev:server": "cargo run -p linter-server",
+    "dev:web": "pnpm --filter web dev",
+    "build": "pnpm --filter web build && cargo build --release",
+    "test": "cargo test --lib --workspace && cargo test --tests --workspace && pnpm --filter web test",
+    "lint": "cargo clippy --workspace --tests && pnpm --filter web lint",
+    "format": "cargo fmt --check",
+    "dataset:download": "cargo run -p linter-cli -- dataset download",
+    "dataset:ingest": "cargo run -p linter-cli -- dataset ingest",
+    "dataset:inspect": "cargo run -p linter-cli -- dataset inspect",
+    "dataset:validate": "cargo run -p linter-cli -- dataset validate"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}

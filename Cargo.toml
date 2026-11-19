@@ -1,0 +1,29 @@
+[workspace]
+members = [
+    "crates/linter-core",
+    "crates/linter-server",
+    "crates/linter-cli",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Steam Storefront Linter Contributors"]
+license = "MIT"
+repository = "https://github.com/LaymanMax/steam-storefront-linter"
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1.42", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+parquet = { version = "53.3", features = ["arrow"] }
+arrow = "53.3"
+uuid = { version = "1.11", features = ["v4", "serde"] }
+regex = "1.11"
