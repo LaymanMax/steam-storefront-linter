@@ -1,0 +1,21 @@
+[package]
+name = "linter-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "steam-storefront-linter"
+path = "src/main.rs"
+
+[dependencies]
+linter-core = { path = "../linter-core" }
+tokio.workspace = true
+clap = { version = "4.5", features = ["derive", "env"] }
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+thiserror.workspace = true
+colored = "3.0"
