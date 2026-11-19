@@ -1,56 +1,231 @@
-# Project Title
+# Steam Storefront Linter
 
-[![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg)](./CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Rust](https://img.shields.io/badge/Rust-1.80%2B-orange.svg)](https://www.rust-lang.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 
-One-line description of what this project does and who it's for.
+> **A deterministic store listing completeness auditor and peer benchmarking tool for independent game developers.**
+
+Steam Storefront Linter audits the completeness of Steam store listings before and after publication. It checks metadata, descriptions, media, languages, support links, and platform compatibility, and benchmarks these attributes against comparable indie titles from the public [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset).
+
+---
+
+> ### ⚠️ Important Product Scope
+>
+> **Steam Storefront Linter is a metadata completeness auditor, not a game-success predictor.**
+>
+> It does **not** predict game sales, units sold, player counts, Steam rankings, or review scores. A game with 15 screenshots is not inherently better than one with 6, and Linux native support does not guarantee sales. Descriptive benchmarking provides peer context so developers can see how their store presence compares with peer titles in their genre and release window.
+
+---
 
 ## Features
 
-- Feature one
-- Feature two
-- Feature three
+- **Multi-Source Input:** Audit using a Steam AppID, a store URL (e.g. `https://store.steampowered.com/app/2539430/`), or an uploaded listing metadata JSON file.
+- **Deterministic Audit Engine:** Rule-based verification across 8 core categories with structured findings, severity badges (`Critical`, `Warning`, `Info`, `Pass`), evidence, and actionable recommendations.
+- **Rule Profiles:** Supports `Balanced` (conservative thresholds) and `Strict` (higher standards for launch readiness).
+- **Peer Benchmarking:** Compares your listing against peer cohorts (matching genres, release year, and indie classification) using actual percentile distributions (median, IQR, percentile rank, and share of comparable games with higher values).
+- **Missing Data Integrity:** Preserves the distinction between present, empty, and unknown data. Missing values are never falsely converted into zeroes.
+- **Reproducible Dataset Ingestion:** Ingests the public Parquet dataset, deduplicates records, and automatically flags and excludes transient playtest listings (e.g. AppID 2539430) and sparse records from benchmark cohorts.
+- **Standalone Reports:** Export machine-readable JSON or self-contained, responsive HTML reports that open anywhere without a server.
+- **Unified Engine:** The command-line interface (`steam-storefront-linter`) and the HTTP web interface invoke the exact same underlying Rust core.
 
-## Getting Started
+---
+
+## Architecture
+
+```text
+steam-storefront-linter/
+├── apps/
+│   └── web/                   # React 19 + TypeScript + Vite frontend
+├── crates/
+│   ├── linter-core/           # Domain models, parser, rules engine, benchmarking, SQLite DB, report generation
+│   ├── linter-server/         # Axum HTTP API & static asset server with rate-limiting & caching
+│   └── linter-cli/            # Command-line interface (`steam-storefront-linter`)
+├── data/
+│   ├── raw/                   # (gitignored) Raw Parquet dataset from Hugging Face
+│   ├── processed/             # (gitignored) Ingested SQLite benchmark database & manifest
+│   └── fixtures/              # Tracked test fixtures (JSON & sample records)
+└── docs/                      # Architectural, benchmark, API, and schema documentation
+```
+
+For in-depth architectural details, see [docs/architecture.md](./docs/architecture.md).
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-List anything the user needs to have installed before they can use this project.
+- [Rust](https://www.rust-lang.org/tools/install) (1.80+)
+- [Node.js](https://nodejs.org/) (20+)
+- [pnpm](https://pnpm.io/) (9+)
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/LaymanMax/<repo-name>.git
-cd repo-name
+git clone https://github.com/LaymanMax/steam-storefront-linter.git
+cd steam-storefront-linter
 
-# Install dependencies
-# add your install command here
+# Install frontend dependencies
+pnpm install
+
+# Initialize local sample benchmark database
+cargo run -p linter-cli -- dataset sample
 ```
 
-### Usage
+### Running the Web Application
+
+#### Option A: Full-Stack Development Mode
 
 ```bash
-# Add your run command here
+# Terminal 1: Start Rust backend server (listens on http://127.0.0.1:3000)
+cargo run -p linter-server
+
+# Terminal 2: Start Vite frontend server (runs on http://localhost:5173 with API proxy)
+pnpm --filter web dev
 ```
 
-## Contributing
+#### Option B: Self-Hosted Production Mode
 
-We'd love to accept your patches and contributions to this project. There are just a few guidelines you need to follow.
+```bash
+# Build web frontend and run unified Rust server
+pnpm --filter web build
+cargo run --release -p linter-server
+# Open http://localhost:3000 in your browser
+```
 
-### [Code of Conduct](./CODE_OF_CONDUCT.md)
+---
 
-This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) as its Code of Conduct, and we expect all project participants to adhere to it. Kindly read the [full guide](./CODE_OF_CONDUCT.md) to understand what actions will not be tolerated.
+## CLI Usage
 
-### [Contributing Guide](./CONTRIBUTING.md)
+The CLI binary is named `steam-storefront-linter`.
 
-Read our [contributing guide](./CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes to the project.
+### 1. Audit a Listing
 
-### Issues
+```bash
+# Audit by numeric Steam AppID
+steam-storefront-linter audit 2539430
 
-Feel free to submit issues and enhancement requests. Use the template provided when creating an issue to ensure your request is clear and actionable.
+# Audit by Steam store URL
+steam-storefront-linter audit "https://store.steampowered.com/app/2539430/Black_Dragon_Mage/"
 
-See the open issues for a complete list of proposed features (and known issues).
+# Audit local JSON metadata
+steam-storefront-linter audit --input data/fixtures/valid_indie_game.json
 
-## [License](./LICENSE)
+# Export standalone HTML report
+steam-storefront-linter audit 2539430 --format html --output report.html
 
-This project is licensed under the [MIT License](./LICENSE), meaning that you're free to modify, distribute, and/or use it for any commercial or private project.
+# Output JSON for CI/CD scripting
+steam-storefront-linter audit 2539430 --format json
+```
+
+### 2. Dataset Management
+
+```bash
+# Download the 190MB Parquet dataset from Hugging Face
+steam-storefront-linter dataset download
+
+# Ingest and normalize Parquet data into SQLite benchmark database
+steam-storefront-linter dataset ingest
+
+# Inspect dataset metadata, row counts, and top genres
+steam-storefront-linter dataset inspect
+
+# Validate database integrity and index coverage
+steam-storefront-linter dataset validate
+```
+
+### 3. Benchmark Inspection
+
+```bash
+# Check benchmark system status
+steam-storefront-linter benchmark status
+
+# Inspect metric distributions for a specific cohort
+steam-storefront-linter benchmark inspect --genre Action --year 2024 --indie
+```
+
+---
+
+## Audit Rules
+
+The audit engine evaluates store pages across 8 essential categories:
+
+1. **Description Completeness:** Checks short description word/char counts, detailed description ("About This Game") depth, placeholder text detection ("Lorem Ipsum", "Coming soon", "TBD").
+2. **Screenshot Completeness:** Validates screenshot counts against standard thresholds (5 in Balanced, 8 in Strict), detects missing URLs and duplicate uploads.
+3. **Trailers & Video:** Checks trailer presence and video counts (informational; trailers are not penalized as failures).
+4. **Localization Coverage:** Measures interface languages, full audio voiceover declarations, and footnote markup.
+5. **Support Information:** Validates availability of dedicated support URLs, support email addresses, and website links.
+6. **Features & Categories:** Audits declared Steam categories (Single-player, Controller support, Steam Cloud, Achievements).
+7. **Platform Support:** Explicitly reports Windows, macOS, and Linux support.
+8. **General Metadata:** Audits developer studio name, publisher, header capsule image (460x215px), primary genres, and release date.
+
+For full rule explanations and threshold configurations, see [docs/audit-rules.md](./docs/audit-rules.md).
+
+---
+
+## Benchmark Methodology
+
+- **Cohort Selection:** Uses a 5-stage fallback algorithm matching primary genres, release year, and indie classification. When sample sizes are small, cohorts broaden transparently with explicit disclosure.
+- **Minimum Sample Threshold:** Requires at least 30 usable records per metric. Tiny samples are flagged as `insufficient_sample` rather than producing misleading percentages.
+- **Percentile Convention:** Calculates linear rank interpolation:
+  $$\text{Percentile Rank} = \frac{\text{count}(\text{value} < v) + 0.5 \times \text{count}(\text{value} = v)}{\text{total usable records}} \times 100$$
+- **Dataset Attribution:** Derived from the MIT-licensed `FronkonGames/steam-games-dataset`.
+
+For detailed documentation, see [docs/benchmark-methodology.md](./docs/benchmark-methodology.md).
+
+---
+
+## Docker & Self-Hosting
+
+A multi-stage `Dockerfile` and `docker-compose.yml` are provided for turnkey containerized deployment:
+
+```bash
+# Build and run with Docker Compose
+docker compose up -d
+
+# Check server health
+curl http://localhost:3000/api/v1/health
+```
+
+The web interface will be available at `http://localhost:3000`.
+
+---
+
+## Testing
+
+```bash
+# Run all Rust unit and integration tests
+cargo test --lib --workspace
+cargo test --tests --workspace
+
+# Run frontend tests with Vitest
+pnpm --filter web test
+
+# Check code formatting
+cargo fmt --check
+
+# Run Rust linter
+cargo clippy --workspace --tests
+```
+
+---
+
+## Documentation Index
+
+- [Architecture Overview](./docs/architecture.md)
+- [Benchmark Methodology](./docs/benchmark-methodology.md)
+- [Dataset Ingestion Pipeline](./docs/dataset-ingestion.md)
+- [Audit Rules Reference](./docs/audit-rules.md)
+- [HTTP API Reference](./docs/api.md)
+- [Report Schema Reference](./docs/report-schema.md)
+- [Local Development Guide](./docs/development.md)
+- [Security & Privacy Policy](./docs/security.md)
+
+---
+
+## License & Attribution
+
+- **Code:** Licensed under the [MIT License](./LICENSE).
+- **Benchmark Data:** Sourced from [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset) under the MIT License.
+- **Disclaimer:** Steam and the Steam logo are trademarks and/or registered trademarks of Valve Corporation in the U.S. and/or other countries. Steam Storefront Linter is an independent open-source project and is not affiliated with, endorsed by, or associated with Valve Corporation.
