@@ -1,0 +1,19 @@
+{
+  "app_id": 2539430,
+  "name": "Black Dragon Mage Playtest",
+  "short_description": "Playtest build.",
+  "detailed_description": "",
+  "developers": [],
+  "publishers": [],
+  "release_date": "Coming soon",
+  "genres": ["Action"],
+  "categories": [],
+  "supported_languages": ["English"],
+  "platforms": {
+    "windows": true,
+    "mac": false,
+    "linux": false
+  },
+  "screenshots": [],
+  "movies": []
+}

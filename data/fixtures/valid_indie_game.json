@@ -1,0 +1,75 @@
+{
+  "app_id": 2539430,
+  "name": "Dragon Forge: Chronicles",
+  "short_description": "Forge legendary gear, delve into ancient dungeons, and tame dragons in this indie action-RPG crafting adventure.",
+  "detailed_description": "<h2>Enter the Realm of the Dragon Forge</h2><p>Embark on an epic journey through procedural dungeons, gathering ancient ores and mastering blacksmithing techniques forgotten for centuries.</p><h3>Key Features</h3><ul><li>Deep crafting system with over 300 craftable weapons and armor sets.</li><li>Challenging dungeon crawler combat with responsive dodge and parry mechanics.</li><li>Co-op multiplayer support for up to 4 players.</li></ul>",
+  "developers": ["Emberstone Studios"],
+  "publishers": ["Emberstone Studios"],
+  "release_date": "24 Oct, 2024",
+  "release_year": 2024,
+  "genres": ["Action", "Adventure", "Indie", "RPG"],
+  "categories": [
+    "Single-player",
+    "Online Co-op",
+    "Steam Achievements",
+    "Full controller support",
+    "Steam Cloud"
+  ],
+  "tags": ["Indie", "Crafting", "Action RPG", "Dungeon Crawler", "Dragons"],
+  "supported_languages": [
+    "English",
+    "French",
+    "German",
+    "Spanish - Spain",
+    "Japanese",
+    "Simplified Chinese"
+  ],
+  "full_audio_languages": ["English"],
+  "platforms": {
+    "windows": true,
+    "mac": true,
+    "linux": true
+  },
+  "screenshots": [
+    {
+      "id": 1,
+      "url_thumbnail": "https://example.com/screens/thumb1.jpg",
+      "url_full": "https://example.com/screens/full1.jpg"
+    },
+    {
+      "id": 2,
+      "url_thumbnail": "https://example.com/screens/thumb2.jpg",
+      "url_full": "https://example.com/screens/full2.jpg"
+    },
+    {
+      "id": 3,
+      "url_thumbnail": "https://example.com/screens/thumb3.jpg",
+      "url_full": "https://example.com/screens/full3.jpg"
+    },
+    {
+      "id": 4,
+      "url_thumbnail": "https://example.com/screens/thumb4.jpg",
+      "url_full": "https://example.com/screens/full4.jpg"
+    },
+    {
+      "id": 5,
+      "url_thumbnail": "https://example.com/screens/thumb5.jpg",
+      "url_full": "https://example.com/screens/full5.jpg"
+    },
+    {
+      "id": 6,
+      "url_thumbnail": "https://example.com/screens/thumb6.jpg",
+      "url_full": "https://example.com/screens/full6.jpg"
+    },
+    {
+      "id": 7,
+      "url_thumbnail": "https://example.com/screens/thumb7.jpg",
+      "url_full": "https://example.com/screens/full7.jpg"
+    }
+  ],
+  "movies": [{ "id": 1, "name": "Official Gameplay Reveal Trailer" }],
+  "header_image": "https://example.com/header.jpg",
+  "website": "https://emberstone.example.com/dragonforge",
+  "support_url": "https://emberstone.example.com/support",
+  "support_email": "support@emberstone.example.com"
+}

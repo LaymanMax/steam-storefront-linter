@@ -1,0 +1,88 @@
+{
+  "2539430": {
+    "success": true,
+    "data": {
+      "type": "game",
+      "name": "Black Dragon Mage",
+      "steam_appid": 2539430,
+      "required_age": 0,
+      "is_free": false,
+      "detailed_description": "<h1>Survive the Dragon Swarm</h1><p>Black Dragon Mage is a dark fantasy roguelite bullet hell game. Harness destructive magic, forge demonic alliances, and ride mighty dragons.</p><h2>Key Features</h2><ul><li>Cast chaotic spell combinations</li><li>Upgrade your dark dragon mount</li><li>Survive relentless waves of mythical beasts</li></ul>",
+      "about_the_game": "<p>Black Dragon Mage is a dark fantasy roguelite bullet hell game.</p>",
+      "short_description": "A dark retro roguelite bullet hell where you fight thousands of enemies, harvest their souls, and ride apocalyptic dragons.",
+      "supported_languages": "English<strong>*</strong>, French, German, Spanish - Spain<strong>*</strong>, Japanese, Simplified Chinese<br><strong>*</strong>languages with full audio support",
+      "header_image": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/header.jpg",
+      "website": "https://morbidware.com",
+      "developers": ["Morbidware"],
+      "publishers": ["Morbidware"],
+      "platforms": {
+        "windows": true,
+        "mac": false,
+        "linux": true
+      },
+      "categories": [
+        { "id": 2, "description": "Single-player" },
+        { "id": 22, "description": "Steam Achievements" },
+        { "id": 28, "description": "Full controller support" }
+      ],
+      "genres": [
+        { "id": "1", "description": "Action" },
+        { "id": "23", "description": "Indie" },
+        { "id": "3", "description": "RPG" }
+      ],
+      "screenshots": [
+        {
+          "id": 0,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_0.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_0.1920x1080.jpg"
+        },
+        {
+          "id": 1,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_1.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_1.1920x1080.jpg"
+        },
+        {
+          "id": 2,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_2.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_2.1920x1080.jpg"
+        },
+        {
+          "id": 3,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_3.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_3.1920x1080.jpg"
+        },
+        {
+          "id": 4,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_4.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_4.1920x1080.jpg"
+        },
+        {
+          "id": 5,
+          "path_thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_5.200x112.jpg",
+          "path_full": "https://cdn.akamai.steamstatic.com/steam/apps/2539430/ss_5.1920x1080.jpg"
+        }
+      ],
+      "movies": [
+        {
+          "id": 256972849,
+          "name": "Official Gameplay Trailer",
+          "thumbnail": "https://cdn.akamai.steamstatic.com/steam/apps/256972849/movie.293x165.jpg",
+          "webm": {
+            "480": "https://cdn.akamai.steamstatic.com/steam/apps/256972849/movie480_vp9.webm"
+          },
+          "mp4": {
+            "480": "https://cdn.akamai.steamstatic.com/steam/apps/256972849/movie480.mp4"
+          }
+        }
+      ],
+      "release_date": {
+        "coming_soon": false,
+        "date": "15 Aug, 2024"
+      },
+      "support_info": {
+        "url": "https://discord.gg/morbidware",
+        "email": "support@morbidware.com"
+      }
+    }
+  }
+}
