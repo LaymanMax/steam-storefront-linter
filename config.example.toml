@@ -1,0 +1,38 @@
+# Steam Storefront Linter - Configuration Example
+# Copy this file or set equivalent environment variables.
+
+[server]
+# Host IP address to bind to (use 0.0.0.0 for Docker / public access, 127.0.0.1 for local only)
+host = "127.0.0.1"
+# HTTP port to listen on
+port = 3000
+# Maximum file upload size in bytes (default: 10MB)
+max_upload_bytes = 10485760
+# Path to compiled frontend assets
+web_dist_path = "apps/web/dist"
+
+[database]
+# Path to SQLite benchmark database
+path = "data/processed/benchmark.db"
+# Path to raw parquet dataset
+raw_parquet_path = "data/raw/train-00000-of-00001.parquet"
+# Ingestion manifest path
+manifest_path = "data/processed/ingestion_manifest.json"
+
+[benchmarks]
+# Minimum number of usable records required to display a comparative benchmark metric
+min_samples = 30
+# Default audit profile: "balanced" or "strict"
+default_profile = "balanced"
+
+[steam]
+# Default ISO country code for Steam pricing and currency (e.g., "us", "de", "gb")
+country = "us"
+# Default language for Steam metadata (e.g., "english", "schinese", "japanese")
+language = "english"
+# HTTP timeout for Steam API requests (seconds)
+timeout_seconds = 10
+# In-memory TTL cache for Steam store API responses (seconds)
+cache_ttl_seconds = 300
+# Maximum retry attempts for transient Steam API failures
+max_retries = 3

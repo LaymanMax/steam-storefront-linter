@@ -1,0 +1,21 @@
+services:
+  steam-storefront-linter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: steam-storefront-linter
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - BENCHMARK_DB_PATH=/app/data/processed/benchmark.db
+      - WEB_DIST_PATH=/app/apps/web/dist
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
