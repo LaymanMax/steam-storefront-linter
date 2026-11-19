@@ -14,7 +14,7 @@ We welcome contributions of all kinds to improve Steam Storefront Linter! Whethe
    ```
 
 2. **Install Node & Rust Toolchains**:
-   - Rust: `1.85+` (stable)
+   - Rust: `1.89+` (stable)
    - Node: `v20+` or `v22+`
    - Package manager: `pnpm` (`corepack enable && corepack prepare pnpm@latest --activate`)
 

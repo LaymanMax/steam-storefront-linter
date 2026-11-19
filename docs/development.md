@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- **Rust 1.80+** (includes `cargo` and `rustc`)
+- **Rust 1.89+** (includes `cargo` and `rustc`)
 - **Node.js 20+**
 - **pnpm 9+** or **10+**
 

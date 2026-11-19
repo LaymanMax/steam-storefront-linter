@@ -14,13 +14,13 @@ COPY apps/web ./apps/web
 RUN pnpm --filter web build
 
 # 2. Rust build
-FROM rust:1.85-bookworm AS rust-builder
+FROM rust:1-bookworm AS rust-builder
 WORKDIR /app
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y pkg-config libssl-dev libsqlite3-dev && rm -rf /var/lib/apt/lists/*
 
-COPY Cargo.toml ./
+COPY Cargo.toml Cargo.lock ./
 COPY crates ./crates
 
 RUN cargo build --release -p linter-server -p linter-cli
