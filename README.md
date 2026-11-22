@@ -6,7 +6,10 @@
 
 > **A deterministic store listing completeness auditor and peer benchmarking tool for independent game developers.**
 
-Steam Storefront Linter audits the completeness of Steam store listings before and after publication. It checks metadata, descriptions, media, languages, support links, and platform compatibility, and benchmarks these attributes against comparable indie titles from the public [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset).
+Steam Storefront Linter audits the completeness of Steam store listings before and after publication. It inspects metadata, descriptions, media assets, localization tables, support links, and platform compatibility, and benchmarks those attributes against comparable peer titles from the public [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset).
+
+![Steam Storefront Linter Overview](./docs/screenshots/overview.png)
+_The web application auditing a store listing across 8 core metadata categories with section coverage scores and structured rule evaluations._
 
 ---
 
@@ -20,14 +23,56 @@ Steam Storefront Linter audits the completeness of Steam store listings before a
 
 ## Features
 
-- **Multi-Source Input:** Audit using a Steam AppID, a store URL (e.g. `https://store.steampowered.com/app/2539430/`), or an uploaded listing metadata JSON file.
-- **Deterministic Audit Engine:** Rule-based verification across 8 core categories with structured findings, severity badges (`Critical`, `Warning`, `Info`, `Pass`), evidence, and actionable recommendations.
-- **Rule Profiles:** Supports `Balanced` (conservative thresholds) and `Strict` (higher standards for launch readiness).
-- **Peer Benchmarking:** Compares your listing against peer cohorts (matching genres, release year, and indie classification) using actual percentile distributions (median, IQR, percentile rank, and share of comparable games with higher values).
+- **Multi-Source Input:** Audit using a numeric Steam AppID, a store URL (e.g. `https://store.steampowered.com/app/2539430/`), or an uploaded listing metadata JSON file (supports pre-release drafts, raw Steam `appdetails` payloads, and normalized listing schemas).
+- **Deterministic Audit Engine:** Rule-based verification across 8 core categories with structured findings, severity badges (`Critical`, `Warning`, `Info`, `Pass`), field-level evidence, and actionable recommendations.
+- **Rule Profiles:** Supports `Balanced` (conservative thresholds) and `Strict` (higher standards for launch readiness, such as requiring 8+ screenshots and 100+ detailed description words).
+- **Peer Benchmarking:** Compares your listing against peer cohorts (matching genres, release year, and indie classification) using actual percentile distributions (median, interquartile range, percentile rank, and share of comparable games with higher values).
 - **Missing Data Integrity:** Preserves the distinction between present, empty, and unknown data. Missing values are never falsely converted into zeroes.
-- **Reproducible Dataset Ingestion:** Ingests the public Parquet dataset, deduplicates records, and automatically flags and excludes transient playtest listings (e.g. AppID 2539430) and sparse records from benchmark cohorts.
-- **Standalone Reports:** Export machine-readable JSON or self-contained, responsive HTML reports that open anywhere without a server.
-- **Unified Engine:** The command-line interface (`steam-storefront-linter`) and the HTTP web interface invoke the exact same underlying Rust core.
+- **Reproducible Dataset Ingestion:** Ingests the public Parquet dataset, deduplicates records by AppID, and automatically flags and excludes transient playtest listings (e.g. AppID 2539430 playtest) and sparse records from benchmark cohorts.
+- **Standalone Reports:** Export machine-readable JSON or self-contained, print-friendly HTML reports that open anywhere without a server.
+- **Unified Engine:** The command-line interface (`steam-storefront-linter`), the HTTP API (`linter-server`), and the React web application invoke the exact same underlying Rust core (`linter-core`).
+
+---
+
+## Visual Showcase
+
+### Web Application
+
+#### 1. Storefront Input & Pre-Release JSON Upload
+
+Enter any published Steam AppID or URL with customizable regional store country, storefront language, and audit profile—or upload local metadata JSON files before your store page goes live.
+
+![Audit Input Form](./docs/screenshots/audit-form.png)
+
+#### 2. Strict Profile Audit & Actionable Findings
+
+Filter audit findings by severity (`Critical`, `Warning`, `Info`, `Pass`) or category. Each non-passing finding includes the exact inspected value alongside an actionable recommendation for Steamworks Store Admin.
+
+![Strict Profile Findings & Filtering](./docs/screenshots/findings-filtering.png)
+
+#### 3. Peer Cohort Benchmarking & Percentile Distributions
+
+Compare numerical and categorical listing metrics against automatically matched indie peer cohorts, complete with median, IQR (25th–75th percentile), percentile rank bars, and feature adoption rates.
+
+![Peer Benchmarks View](./docs/screenshots/peer-benchmarks.png)
+
+#### 4. Methodology & Dataset Provenance
+
+Built-in documentation of the 5-stage cohort fallback policy, data quality exclusions, and statistical conventions.
+
+![Benchmark Methodology & Dataset Provenance](./docs/screenshots/methodology.png)
+
+---
+
+### Command-Line Interface (CLI)
+
+#### Full Listing Audit & Peer Benchmarking (`steam-storefront-linter audit`)
+
+![CLI Storefront Audit Output](./docs/screenshots/cli-audit.svg)
+
+#### Cohort Distribution Inspection (`steam-storefront-linter benchmark inspect`)
+
+![CLI Benchmark Cohort Inspection](./docs/screenshots/cli-benchmark.svg)
 
 ---
 
@@ -45,7 +90,9 @@ steam-storefront-linter/
 │   ├── raw/                   # (gitignored) Raw Parquet dataset from Hugging Face
 │   ├── processed/             # (gitignored) Ingested SQLite benchmark database & manifest
 │   └── fixtures/              # Tracked test fixtures (JSON & sample records)
-└── docs/                      # Architectural, benchmark, API, and schema documentation
+└── docs/
+    ├── screenshots/           # Web UI & CLI visual demonstrations
+    └── *.md                   # Architectural, benchmark, API, and schema documentation
 ```
 
 For in-depth architectural details, see [docs/architecture.md](./docs/architecture.md).
@@ -69,7 +116,7 @@ cd steam-storefront-linter
 # Install frontend dependencies
 pnpm install
 
-# Initialize local sample benchmark database
+# Initialize local sample benchmark database (215 eligible games across 11 genres)
 cargo run -p linter-cli -- dataset sample
 ```
 
@@ -91,7 +138,7 @@ pnpm --filter web dev
 # Build web frontend and run unified Rust server
 pnpm --filter web build
 cargo run --release -p linter-server
-# Open http://localhost:3000 in your browser
+# Open http://127.0.0.1:3000 in your browser
 ```
 
 ---
@@ -109,20 +156,24 @@ steam-storefront-linter audit 2539430
 # Audit by Steam store URL
 steam-storefront-linter audit "https://store.steampowered.com/app/2539430/Black_Dragon_Mage/"
 
-# Audit local JSON metadata
+# Audit local JSON metadata (normalized schema or Steam appdetails response)
 steam-storefront-linter audit --input data/fixtures/valid_indie_game.json
+steam-storefront-linter audit --input data/fixtures/steam_api_sample_2539430.json --profile strict
 
 # Export standalone HTML report
-steam-storefront-linter audit 2539430 --format html --output report.html
+steam-storefront-linter audit --input data/fixtures/steam_api_sample_2539430.json --format html --output report.html
 
-# Output JSON for CI/CD scripting
-steam-storefront-linter audit 2539430 --format json
+# Output JSON for CI/CD scripting (exits with code 1 if critical findings are present)
+steam-storefront-linter audit --input data/fixtures/valid_indie_game.json --format json
 ```
 
 ### 2. Dataset Management
 
 ```bash
-# Download the 190MB Parquet dataset from Hugging Face
+# Initialize offline sample benchmark database (215 eligible games, 5 excluded playtest/sparse rows)
+steam-storefront-linter dataset sample
+
+# Download the full 190MB Parquet dataset from Hugging Face
 steam-storefront-linter dataset download
 
 # Ingest and normalize Parquet data into SQLite benchmark database
@@ -141,9 +192,30 @@ steam-storefront-linter dataset validate
 # Check benchmark system status
 steam-storefront-linter benchmark status
 
-# Inspect metric distributions for a specific cohort
+# Inspect metric distributions (Median, IQR, Range, and Adoption %) for a specific cohort
 steam-storefront-linter benchmark inspect --genre Action --year 2024 --indie
 ```
+
+---
+
+## HTTP API Endpoints
+
+When `linter-server` is running (default `http://127.0.0.1:3000`), all endpoints are served under `/api/v1`:
+
+| Method | Endpoint                        | Description                                                                  |
+| :----- | :------------------------------ | :--------------------------------------------------------------------------- |
+| `GET`  | `/api/v1/health`                | Server health check, version, and uptime                                     |
+| `POST` | `/api/v1/audits/steam/:app_id`  | Audit a live Steam listing (`?country=us&language=english&profile=balanced`) |
+| `POST` | `/api/v1/audits/import`         | Audit an uploaded JSON listing payload (`?profile=balanced\|strict`)         |
+| `GET`  | `/api/v1/audits/sample-report`  | Generate a complete sample audit report                                      |
+| `GET`  | `/api/v1/audits/example`        | Download an example listing metadata JSON template                           |
+| `GET`  | `/api/v1/audits/:audit_id`      | Retrieve a cached audit report by UUID                                       |
+| `GET`  | `/api/v1/audits/:audit_id/json` | Download the audit report as a formatted `.json` attachment                  |
+| `GET`  | `/api/v1/audits/:audit_id/html` | Download a self-contained `.html` report                                     |
+| `GET`  | `/api/v1/benchmarks/status`     | Check benchmark SQLite database availability and metadata                    |
+| `GET`  | `/api/v1/benchmarks/cohort`     | Inspect cohort metrics (`?genre=Action&year=2024&indie=true`)                |
+
+See [docs/api.md](./docs/api.md) for request and response payloads.
 
 ---
 
@@ -205,8 +277,9 @@ pnpm --filter web test
 # Check code formatting
 cargo fmt --check
 
-# Run Rust linter
+# Run Rust and TypeScript linters
 cargo clippy --workspace --tests
+pnpm --filter web lint
 ```
 
 ---
