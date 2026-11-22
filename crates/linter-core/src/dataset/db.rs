@@ -306,20 +306,35 @@ impl BenchmarkDb {
             .cloned()
             .collect();
 
-        let mut stage_name = format!(
-            "{}{} games sharing genre(s) [{}]",
-            if target_is_indie { "Indie " } else { "" },
-            target_year
-                .map(|y| format!("released in {} ", y))
-                .unwrap_or_default(),
-            target_genres.join(", ")
-        );
+        let mut stage_name = match (target_is_indie, target_year) {
+            (true, Some(y)) => format!(
+                "Indie games released in {} sharing genre(s) [{}]",
+                y,
+                target_genres.join(", ")
+            ),
+            (true, None) => format!(
+                "Indie games sharing genre(s) [{}]",
+                target_genres.join(", ")
+            ),
+            (false, Some(y)) => format!(
+                "Games released in {} sharing genre(s) [{}]",
+                y,
+                target_genres.join(", ")
+            ),
+            (false, None) => format!("Games sharing genre(s) [{}]", target_genres.join(", ")),
+        };
         let mut fallback_applied = false;
-        let mut explanation = format!(
-            "Specific cohort matching target genres ({}) and release year ({:?}).",
-            target_genres.join(", "),
-            target_year
-        );
+        let mut explanation = match target_year {
+            Some(y) => format!(
+                "Specific cohort matching target genres ({}) and release year ({}).",
+                target_genres.join(", "),
+                y
+            ),
+            None => format!(
+                "Specific cohort matching target genres ({}).",
+                target_genres.join(", ")
+            ),
+        };
 
         // Stage 2: Relax indie requirement if count < min_samples
         if cohort_games.len() < min_samples && target_is_indie {
@@ -602,7 +617,14 @@ impl BenchmarkDb {
         };
 
         let listing_value_display = match listing_val {
-            Some(v) => format!("{} {}", v as i64, unit),
+            Some(v) => {
+                let int_val = v as i64;
+                if int_val == 1 && unit.ends_with('s') {
+                    format!("1 {}", &unit[..unit.len() - 1])
+                } else {
+                    format!("{} {}", int_val, unit)
+                }
+            }
             None => "Unknown / Unavailable".to_string(),
         };
 
@@ -653,13 +675,33 @@ impl BenchmarkDb {
         }
 
         if listing_val.is_none() {
+            usable_values.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            let min = usable_values.first().copied();
+            let max = usable_values.last().copied();
+            let median = calc_percentile(&usable_values, 0.50);
+            let p25 = calc_percentile(&usable_values, 0.25);
+            let p75 = calc_percentile(&usable_values, 0.75);
+
             return BenchmarkResult {
                 metric_id: metric_id.to_string(),
                 metric_name: metric_name.to_string(),
                 category,
                 listing_value_display,
                 status: BenchmarkStatus::MissingListingData,
-                distribution: None,
+                distribution: Some(BenchmarkDistribution {
+                    sample_size,
+                    usable_records,
+                    coverage_pct,
+                    listing_value: None,
+                    min,
+                    max,
+                    p25: Some(p25),
+                    median: Some(median),
+                    p75: Some(p75),
+                    percentile_rank: None,
+                    share_above: None,
+                    share_below: None,
+                }),
                 categorical: None,
                 cohort_definition: cohort.cohort_name.clone(),
                 explanation: Some("This metric could not be compared because the listing did not provide this data.".to_string()),
@@ -914,5 +956,19 @@ mod tests {
         let dist = shot_result.distribution.as_ref().unwrap();
         assert_eq!(dist.listing_value, Some(2.0));
         assert!(dist.percentile_rank.is_some());
+
+        // Also verify that when listing data is missing (e.g., short_description is None),
+        // the cohort distribution summary (median, p25, p75) is still populated for cohort inspection.
+        let short_desc_result = results
+            .iter()
+            .find(|r| r.metric_id == "description.short_words")
+            .unwrap();
+        assert_eq!(
+            short_desc_result.status,
+            BenchmarkStatus::MissingListingData
+        );
+        let short_dist = short_desc_result.distribution.as_ref().unwrap();
+        assert_eq!(short_dist.median, Some(25.0));
+        assert!(short_dist.percentile_rank.is_none());
     }
 }

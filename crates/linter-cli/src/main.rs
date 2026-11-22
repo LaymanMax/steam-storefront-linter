@@ -624,7 +624,7 @@ async fn handle_benchmark(cmd: BenchmarkCommand) -> ExitCode {
                     println!("\n{}", "Metric Distributions:".bold());
                     for r in results {
                         if let Some(dist) = r.distribution {
-                            if r.status == BenchmarkStatus::Calculated {
+                            if dist.median.is_some() {
                                 println!(
                                     "  - {:<30} Median: {:<4.0} IQR: [{:.0} - {:.0}] Range: [{:.0} - {:.0}] ({} usable)",
                                     r.metric_name,

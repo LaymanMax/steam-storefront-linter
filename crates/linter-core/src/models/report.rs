@@ -65,10 +65,9 @@ impl AuditReport {
                 Severity::Critical => critical += 1,
                 Severity::Warning => warnings += 1,
                 Severity::Info => {
+                    info += 1;
                     if f.id.ends_with(".unknown") || f.id.ends_with(".missing_data") {
                         unknown += 1;
-                    } else {
-                        info += 1;
                     }
                 }
                 Severity::Pass => passed += 1,
