@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 496" width="960" height="496">
+  <defs>
+    <style>
+      .term-text { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 13px; white-space: pre; }
+      .title-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; font-weight: 600; fill: #94a3b8; }
+    </style>
+  </defs>
+  <rect width="960" height="496" rx="10" fill="#0b0f17" stroke="#1e293b" stroke-width="1.5"/>
+  <path d="M 0 10 Q 0 0 10 0 L 950 0 Q 960 0 960 10 L 960 42 L 0 42 Z" fill="#131b29"/>
+  <line x1="0" y1="42" x2="960" y2="42" stroke="#1e293b" stroke-width="1"/>
+  <circle cx="20" cy="21" r="6" fill="#ef4444"/>
+  <circle cx="40" cy="21" r="6" fill="#f59e0b"/>
+  <circle cx="60" cy="21" r="6" fill="#10b981"/>
+  <text x="480" y="26" text-anchor="middle" class="title-text">steam-storefront-linter — CLI Benchmark Cohort Distributions</text>
+  <text x="24" y="76" class="term-text" xml:space="preserve"><tspan fill="#10b981" font-weight="bold">$</tspan> <tspan fill="#ffffff" font-weight="bold">steam-storefront-linter benchmark inspect --genre Action --year 2024 --indie</tspan></text>
+  <text x="24" y="116" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1" font-weight="bold">=== Benchmark Cohort Inspection ===</tspan></text>
+  <text x="24" y="136" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">Cohort Name:    </tspan><tspan fill="#06b6d4">Games sharing genre(s) [Action] across all years</tspan></text>
+  <text x="24" y="156" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">Sample Size:    82 games</tspan></text>
+  <text x="24" y="176" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">Fallback Used:  </tspan><tspan fill="#f59e0b">Yes</tspan></text>
+  <text x="24" y="196" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">Explanation:    Broadened cohort: included games across all release years sharing primary genres.</tspan></text>
+  <text x="24" y="236" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1" font-weight="bold">Metric Distributions:</tspan></text>
+  <text x="24" y="256" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Screenshot Count               Median: 11   IQR: [7 - 15] Range: [4 - 18] (82 usable)</tspan></text>
+  <text x="24" y="276" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Trailer Presence               Adoption: 33% (27/82 usable)</tspan></text>
+  <text x="24" y="296" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Video Trailer Count            Median: 0    IQR: [0 - 1] Range: [0 - 3] (82 usable)</tspan></text>
+  <text x="24" y="316" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Detailed Description Word Count Median: 318  IQR: [210 - 449] Range: [126 - 548] (82 usable)</tspan></text>
+  <text x="24" y="336" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Short Description Word Count   Median: 39   IQR: [28 - 47] Range: [20 - 56] (82 usable)</tspan></text>
+  <text x="24" y="356" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Supported Interface Languages  Median: 6    IQR: [3 - 9] Range: [1 - 11] (82 usable)</tspan></text>
+  <text x="24" y="376" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Full Audio Languages           Median: 1    IQR: [0 - 1] Range: [0 - 1] (82 usable)</tspan></text>
+  <text x="24" y="396" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Support Contact Availability   Adoption: 89% (73/82 usable)</tspan></text>
+  <text x="24" y="416" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Linux Native Support           Adoption: 67% (55/82 usable)</tspan></text>
+  <text x="24" y="436" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - macOS Native Support           Adoption: 33% (27/82 usable)</tspan></text>
+  <text x="24" y="456" class="term-text" xml:space="preserve"><tspan fill="#cbd5e1">  - Declared Steam Categories      Median: 4    IQR: [3 - 6] Range: [2 - 7] (82 usable)</tspan></text>
+</svg>

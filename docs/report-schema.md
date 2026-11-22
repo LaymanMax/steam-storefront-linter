@@ -114,18 +114,18 @@ Reports exported in JSON format conform to the stable schema below:
         "share_above": 66.7,
         "share_below": 15.2
       },
-      "cohort_definition": "Indie released in 2024 games sharing genre(s) [Action, Adventure, Indie, RPG]",
+      "cohort_definition": "Indie games released in 2024 sharing genre(s) [Action, Adventure, Indie, RPG]",
       "explanation": "Your listing's screenshot count (7) is at the 17th percentile. Approximately 67% of comparable games have a higher value."
     }
   ],
   "cohort": {
-    "cohort_name": "Indie released in 2024 games sharing genre(s) [Action, Adventure, Indie, RPG]",
+    "cohort_name": "Indie games released in 2024 sharing genre(s) [Action, Adventure, Indie, RPG]",
     "total_games_in_cohort": 33,
     "genres": ["Action", "Adventure", "Indie", "RPG"],
     "release_year": 2024,
     "is_indie_restricted": true,
     "fallback_applied": false,
-    "explanation": "Specific cohort matching target genres (Action, Adventure, Indie, RPG) and release year (Some(2024))."
+    "explanation": "Specific cohort matching target genres (Action, Adventure, Indie, RPG) and release year (2024)."
   },
   "methodology": {
     "dataset_source": "FronkonGames/steam-games-dataset",
